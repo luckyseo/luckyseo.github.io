@@ -1,0 +1,130 @@
+.hidden{
+    display:none;
+}
+body{
+    margin:0;
+}
+img{
+    position:relative;
+    height: 100vh;
+    min-width: 100%;
+    min-height: 100%;;
+    background-size: cover;
+}
+.img-cover{
+    position:absolute;
+    margin:0;
+    height:100%;
+    width:100%;
+    background-color: rgba(256,256,256,0.2);
+    z-index:1;
+}
+form, h1, h2, ul, #quote, #weather,.form{
+    position:absolute;
+    left: 50%;
+    transform: translate(0,-50%);
+    z-index:2;
+}
+
+.login-form{
+    top:8%;
+    width:300px;
+    transform: translate(-50%,-50%);
+}
+.login-form input{
+    border-style: none;
+    border-radius: 2px;
+    width:220px;
+    height:30px;
+    box-shadow: 0px 1px 4px black;
+    transition-duration: 0.4s;
+    cursor: text;
+}
+.login-form input:hover{
+    box-shadow: 0px 0px 14px black;}
+    
+.login-form button{
+    width:55px;
+    height:30px;
+    border-style: none;
+    cursor:pointer;
+    box-shadow: 0px 1px 4px black;
+}
+.login-form button:hover{
+    box-shadow: 1px 1px 0px black;
+}
+#weather{
+    top:13%;
+    transform: translate(-50%,-50%);
+}
+#clock{
+    top:13%;
+    transform: translate(-50%,-50%);
+    font-size: 80px;
+    margin:50;
+}
+#greeting{
+    display:block;
+    top:32%;
+    font-size: 50px;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    margin:20px 0px 0px 0px;
+    padding-top:20px;
+    width:450px;
+    height: 70px;
+
+}
+
+#todo-form{
+    top:47%;
+    transform: translate(-50%,-50%);
+}
+#todo-form input{
+    border-radius: 2px;
+    border-style: none;
+    width:220px;
+    height:30px;
+    box-shadow: 0px 1px 4px black;
+    transition-duration: 0.4s;
+    cursor: text;
+}
+#todo-form input:hover{
+    box-shadow: 0px 0px 14px black;
+}
+#todo-list{
+    top:60%;
+    transform: translate(-50%,-50%);
+    list-style: square;
+}
+ul{
+    padding-left: 450px;
+    width:100vh;
+}
+li{
+    height: 30px;
+}
+li span{
+    text-align: left;
+}
+li button{
+    border-style: none;
+    background-color: none;
+    cursor: pointer;
+    justify-content:end;
+    margin-left: 10px;
+    border-radius: 3px;
+
+}
+li button:hover{
+    box-shadow: 1px 1px 0px black;
+}
+#quote{
+    bottom:3%;
+    transform: translate(-50%,-50%);
+}
+#quote span{
+    display: block;
+    text-align: center;
+    font-weight: 300;
+}
