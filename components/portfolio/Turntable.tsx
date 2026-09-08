@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
-const YOUTUBE_VIDEO_ID = "cOARkf5ZmtI";
+const YOUTUBE_VIDEO_ID = "luT8SvYgJXc";
 
 type YouTubeWindow = typeof window & {
   YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
@@ -93,10 +93,16 @@ export function Turntable() {
         },
         events: {
           onReady: () => {
+            // eslint-disable-next-line no-console
+            console.debug("[Turntable] player ready, desired playing:", desiredPlayingRef.current);
             isReadyRef.current = true;
             if (desiredPlayingRef.current) {
               playerRef.current?.playVideo();
             }
+          },
+          onStateChange: (event: { data: number }) => {
+            // eslint-disable-next-line no-console
+            console.debug("[Turntable] state changed:", event.data);
           },
           onError: (event: { data: number }) => {
             const message = YT_ERROR_MESSAGES[event.data] ?? `YouTube player error (code ${event.data}).`;
@@ -105,6 +111,9 @@ export function Turntable() {
           },
         },
       });
+
+      // eslint-disable-next-line no-console
+      console.debug("[Turntable] player constructed");
     }
 
     if (win.YT?.Player) {
