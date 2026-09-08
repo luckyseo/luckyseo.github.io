@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
-const YOUTUBE_VIDEO_ID = "luT8SvYgJXc";
+const YOUTUBE_VIDEO_ID = "Qt6Y9_7QeHQ";
 
 type YouTubeWindow = typeof window & {
   YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
@@ -86,8 +86,6 @@ export function Turntable() {
           playsinline: 1,
           controls: 0,
           disablekb: 1,
-          loop: 1,
-          playlist: YOUTUBE_VIDEO_ID,
           modestbranding: 1,
           rel: 0,
         },
@@ -103,6 +101,12 @@ export function Turntable() {
           onStateChange: (event: { data: number }) => {
             // eslint-disable-next-line no-console
             console.debug("[Turntable] state changed:", event.data);
+            // 0 = ENDED — loop manually instead of via playerVars.loop/playlist,
+            // since combining that with a top-level videoId for the same video
+            // triggers an "HTML5 player error" (code 5) on some player builds.
+            if (event.data === 0 && desiredPlayingRef.current) {
+              playerRef.current?.playVideo();
+            }
           },
           onError: (event: { data: number }) => {
             const message = YT_ERROR_MESSAGES[event.data] ?? `YouTube player error (code ${event.data}).`;
