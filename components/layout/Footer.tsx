@@ -7,8 +7,8 @@ export function Footer() {
       <div className="container site-footer__inner">
         <div className="site-footer__copy">
           <span>Let's keep in touch (*'▽'*)</span>
-          <Button variant="link" href="https://yunseo-park.github.io" target="_blank" rel="noopener">
-            yunseo-park.github.io
+          <Button variant="link" href="https://luckyseo.github.io" target="_blank" rel="noopener">
+            luckyseo.github.io
           </Button>
         </div>
         <span className="site-footer__meta">
