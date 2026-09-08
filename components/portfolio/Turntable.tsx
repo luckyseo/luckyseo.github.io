@@ -9,7 +9,6 @@ const TARGET_DPS = RPM * 6;
 export function Turntable() {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
-  const [spinning, setSpinning] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const velocityRef = useRef(0);
   const angleRef = useRef(0);
@@ -31,7 +30,6 @@ export function Turntable() {
 
       angleRef.current = (angleRef.current + velocityRef.current * dt) % 360;
       setAngle(angleRef.current);
-      setSpinning(velocityRef.current > 0.5);
       rafRef.current = requestAnimationFrame(tick);
     }
 
@@ -64,7 +62,7 @@ export function Turntable() {
   return (
     <aside className="now-card" aria-label="Now playing">
       <button
-        className={cn("turntable", playing && "turntable--playing", spinning && "turntable--spinning")}
+        className={cn("turntable", playing && "turntable--playing turntable--spinning")}
         type="button"
         aria-pressed={playing}
         aria-label={playing ? "Stop the record" : "Play the record"}
@@ -80,7 +78,7 @@ export function Turntable() {
             <span className="record__label" />
           </span>
         </span>
-        <span className="turntable__hint">{spinning ? "Now spinning" : "Tap to play"}</span>
+        <span className="turntable__hint">{playing ? "Tap to stop" : "Tap to play"}</span>
       </button>
       <h2>Album or track title</h2>
       <p>Artist name</p>
