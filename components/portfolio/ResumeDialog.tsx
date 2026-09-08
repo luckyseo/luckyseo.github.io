@@ -19,10 +19,7 @@ export function ResumeDialog({ open, onClose }: ResumeDialogProps) {
           <h2 id="resume-title">Request my résumé</h2>
           <IconButton name="x" label="Close dialog" size="sm" onClick={onClose} />
         </div>
-        <p className="dialog__message">
-          I don&apos;t keep a mailing list for this — send me a DM on LinkedIn and I&apos;ll get the current PDF
-          straight to you.
-        </p>
+        <p className="dialog__message">Send me a DM on LinkedIn and I&apos;ll send you my résumé :)</p>
         <div className="dialog__actions">
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
