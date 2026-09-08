@@ -1004,7 +1004,7 @@ textarea {
 }
 
 .site-footer__copy > span {
-  font: var(--type-heading);
+  font: var(--type-subheading);
   letter-spacing: var(--tracking-display);
 }
 
