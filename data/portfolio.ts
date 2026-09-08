@@ -21,13 +21,19 @@ export const profile = {
 export const education = [
   {
     place: "University of Technology, Sydney",
-    detail:
-      "Bachelor of IT · Enterprise Software Development · Data Analytics · Dean's List 2025 and 2026 · GPA 6.94/7.00 · Project Society Secretary",
+    degree: "Bachelor of IT",
+    detail: [
+      "Major · Enterprise Software Development",
+      "Sub major · Data Analytics",
+      "Dean's List 2025 · 2026 | GPA 6.94/7.00",
+      "Ex - UXID · Project Society Secretary",
+      "Lucy Mentoring Program",
+    ],
     date: "Jun 2026",
   },
   {
     place: "Microsoft Bootcamp",
-    detail: "Azure-900",
+    detail: ["Azure-900"],
     date: "Mar 2025",
   },
 ];
