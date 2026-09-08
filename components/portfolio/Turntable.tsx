@@ -80,8 +80,8 @@ export function Turntable() {
         </span>
         <span className="turntable__hint">{playing ? "Tap to stop" : "Tap to play"}</span>
       </button>
-      <h2>Album or track title</h2>
-      <p>Artist name</p>
+      <h2>Fallen Angel</h2>
+      <p>Jennie</p>
       <audio ref={audioRef} src="/audio/now-playing.mp3" loop preload="none" />
     </aside>
   );
