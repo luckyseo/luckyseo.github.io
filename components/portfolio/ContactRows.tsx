@@ -3,7 +3,7 @@ import { profile } from "@/data/portfolio";
 
 const contacts = [
   { icon: "mail", label: "Email", value: profile.email, href: `mailto:${profile.email}` },
-  { icon: "at-sign", label: "LinkedIn", value: "linkedin.com/in/yourname", href: profile.linkedin },
+  { icon: "at-sign", label: "LinkedIn", value: "linkedin.com/in/yunseo-park-profile", href: profile.linkedin },
   { icon: "github", label: "GitHub", value: "github.com/yourname", href: profile.github },
 ];
 

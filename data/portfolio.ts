@@ -4,7 +4,7 @@ export const profile = {
   location: "Sydney",
   timezone: "UTC+10",
   email: "hello@yourdomain.com",
-  linkedin: "https://linkedin.com/in/yourname",
+  linkedin: "https://www.linkedin.com/in/yunseo-park-profile/",
   github: "https://github.com/yourname",
   availability: "Open to work",
   intro: "Explore, Experience, Evolve and Share positivity",

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/core/Button";
 import { IconButton } from "@/components/core/IconButton";
+import { profile } from "@/data/portfolio";
 
 type ResumeDialogProps = {
   open: boolean;
@@ -10,21 +10,7 @@ type ResumeDialogProps = {
 };
 
 export function ResumeDialog({ open, onClose }: ResumeDialogProps) {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-
   if (!open) return null;
-
-  function submit() {
-    if (!/.+@.+\..+/.test(email)) {
-      setError("Enter a valid email address.");
-      return;
-    }
-
-    setEmail("");
-    setError("");
-    onClose();
-  }
 
   return (
     <div className="dialog-layer" role="presentation">
@@ -33,32 +19,16 @@ export function ResumeDialog({ open, onClose }: ResumeDialogProps) {
           <h2 id="resume-title">Request my résumé</h2>
           <IconButton name="x" label="Close dialog" size="sm" onClick={onClose} />
         </div>
-        <p className="dialog__message">Leave an email and I will send the current PDF across. No list, no follow-ups.</p>
-        <label className="field">
-          <span>Your email</span>
-          <input
-            aria-describedby={error ? "resume-error" : undefined}
-            aria-invalid={error ? true : undefined}
-            type="email"
-            placeholder="you@company.com"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-              setError("");
-            }}
-          />
-        </label>
-        {error ? (
-          <p className="field-error" id="resume-error">
-            {error}
-          </p>
-        ) : null}
+        <p className="dialog__message">
+          I don&apos;t keep a mailing list for this — send me a DM on LinkedIn and I&apos;ll get the current PDF
+          straight to you.
+        </p>
         <div className="dialog__actions">
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="button" icon="arrow-up-right" onClick={submit}>
-            Send it over
+          <Button href={profile.linkedin} target="_blank" rel="noopener" icon="arrow-up-right" onClick={onClose}>
+            Message me on LinkedIn
           </Button>
         </div>
       </div>
