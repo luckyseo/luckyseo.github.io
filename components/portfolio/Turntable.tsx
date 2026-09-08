@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
-const YOUTUBE_VIDEO_ID = "SCl9CL9vqa4";
+const YOUTUBE_VIDEO_ID = "cOARkf5ZmtI";
 
 type YouTubeWindow = typeof window & {
   YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
@@ -21,7 +21,7 @@ type YouTubePlayer = {
 export function Turntable() {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
-  const ytMountRef = useRef<HTMLDivElement>(null);
+  const ytWrapperRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
   const velocityRef = useRef(0);
   const angleRef = useRef(0);
@@ -57,11 +57,20 @@ export function Turntable() {
 
   useEffect(() => {
     const win = window as YouTubeWindow;
+    let cancelled = false;
 
+    // The YouTube API replaces its mount element with an <iframe>, so each
+    // effect run gets its own fresh child of the stable wrapper div rather
+    // than reusing a node the API has already detached (React 18 Strict Mode
+    // double-invokes this effect in development, which would otherwise hand
+    // the second run an already-swapped-out, broken container).
     function createPlayer() {
-      if (!ytMountRef.current || !win.YT) return;
+      if (cancelled || !ytWrapperRef.current || !win.YT) return;
 
-      playerRef.current = new win.YT.Player(ytMountRef.current, {
+      const mount = document.createElement("div");
+      ytWrapperRef.current.appendChild(mount);
+
+      playerRef.current = new win.YT.Player(mount, {
         videoId: YOUTUBE_VIDEO_ID,
         playerVars: {
           playsinline: 1,
@@ -93,8 +102,13 @@ export function Turntable() {
     }
 
     return () => {
+      cancelled = true;
       playerRef.current?.destroy();
       playerRef.current = null;
+
+      if (ytWrapperRef.current) {
+        ytWrapperRef.current.innerHTML = "";
+      }
     };
   }, []);
 
@@ -132,7 +146,7 @@ export function Turntable() {
       </button>
       <h2>Fallen Angel</h2>
       <p>Jennie</p>
-      <div ref={ytMountRef} className="turntable__yt-mount" aria-hidden />
+      <div ref={ytWrapperRef} className="turntable__yt-mount" aria-hidden />
     </aside>
   );
 }
