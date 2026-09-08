@@ -1,0 +1,9 @@
+/* Times New Roman is a system font — no webfont files are loaded for display or text.
+   JetBrains Mono (Google Fonts) is kept for eyebrows and metadata only. */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root{
+  --font-display:"Times New Roman",Times,serif;
+  --font-text:"Times New Roman",Times,serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}

@@ -1,0 +1,17 @@
+:root{
+  --dur-1:120ms; /* @kind other */
+  --dur-2:200ms; /* @kind other */
+  --dur-3:320ms; /* @kind other */
+  --dur-4:560ms; /* @kind other */
+  --ease-out:cubic-bezier(.22,1,.36,1); /* @kind other */
+  --ease-inout:cubic-bezier(.65,.05,.36,1); /* @kind other */
+  --ease-spring:cubic-bezier(.34,1.4,.64,1); /* @kind other */
+  --lift-hover:-2px;
+  --press-scale:.985; /* @kind other */
+}
+@media (prefers-reduced-motion:reduce){
+  :root{--dur-1:0ms; /* @kind other */
+  --dur-2:0ms; /* @kind other */
+  --dur-3:0ms; /* @kind other */
+  --dur-4:0ms; /* @kind other */}
+}

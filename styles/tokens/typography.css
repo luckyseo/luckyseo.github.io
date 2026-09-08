@@ -1,0 +1,26 @@
+:root{
+  /* Display — Times New Roman, set large, near-zero tracking */
+  --type-display-1:400 clamp(3rem,7vw,5.5rem)/1.02 var(--font-display);
+  --type-display-2:400 clamp(2.25rem,4.4vw,3.5rem)/1.08 var(--font-display);
+  --type-display-3:400 clamp(1.75rem,2.6vw,2.25rem)/1.14 var(--font-display);
+  --tracking-display:-0.012em;
+
+  /* Headings */
+  --type-heading:400 1.375rem/1.3 var(--font-display);
+  --type-subheading:400 1.125rem/1.4 var(--font-display);
+
+  /* Body — Times New Roman */
+  --type-body-lg:400 1.25rem/1.6 var(--font-text);
+  --type-body:400 1.0625rem/1.6 var(--font-text);
+  --type-body-sm:400 0.9375rem/1.5 var(--font-text);
+
+  /* Meta / eyebrow / mono */
+  --type-label:400 0.9375rem/1.2 var(--font-text);
+  --type-eyebrow:500 0.6875rem/1.1 var(--font-mono);
+  --type-mono:400 0.8125rem/1.5 var(--font-mono);
+  --tracking-eyebrow:0.14em;
+  --tracking-label:0.01em;
+
+  --measure-prose:66ch;
+  --measure-narrow:44ch;
+}

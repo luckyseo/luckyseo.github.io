@@ -1,0 +1,71 @@
+:root{
+  /* Ink — neutral black through greys */
+  --ink-900:#0D0D0D; --ink-800:#1A1A1A; --ink-700:#333333; --ink-500:#616161;
+  --ink-400:#7D7D7D; --ink-300:#9E9E9E; --ink-200:#C4C4C4; --ink-100:#DCDCDC;
+
+  /* Paper — white grounds, no tint */
+  --paper-50:#FFFFFF; --paper-100:#FFFFFF; --paper-200:#F4F4F4; --paper-300:#E3E3E3;
+
+  /* Wine — the single brand accent */
+  --wine-800:#4A1019; --wine-700:#5F1622; --wine-600:#7B1E2B; --wine-500:#9C2436;
+  --wine-300:#D08A97; --wine-100:#F7E6E9;
+
+  /* Support hues, used sparingly for status only */
+  --pine-600:#1F6F5C; --pine-100:#E2F0EB;
+  --clay-600:#B4472B; --clay-100:#F8E3DC;
+
+  /* Semantic aliases — prefer these in components */
+  --text-primary:var(--ink-900);
+  --text-secondary:var(--ink-700);
+  --text-muted:var(--ink-500);
+  --text-inverse:var(--paper-50);
+  --text-accent:var(--wine-700);
+  --text-link:var(--ink-900);
+  --text-link-hover:var(--wine-700);
+
+  --surface-page:var(--paper-100);
+  --surface-card:var(--paper-50);
+  --surface-sunken:var(--paper-200);
+  --surface-inverse:var(--ink-900);
+  --surface-accent:var(--wine-600);
+  --surface-accent-soft:var(--wine-100);
+
+  --border-subtle:var(--paper-300);
+  --border-strong:var(--ink-900);
+  --border-muted:var(--ink-200);
+
+  --focus-ring:var(--wine-600);
+  --surface-accent-hover:var(--wine-700);
+  --border-accent:var(--wine-600);
+  --status-good:var(--pine-600);
+  --status-good-soft:var(--pine-100);
+  --status-alert:var(--clay-600);
+  --status-alert-soft:var(--clay-100);
+
+  /* Highlighter wash used behind hovered/marked text */
+  --wash-accent:rgba(156,36,54,.20);
+}
+
+/* Dark ground — near-black page, used for the dark colour mode and full-bleed sections */
+[data-theme="dark"]{
+  --text-primary:#FAFAFA;
+  --text-secondary:#DCDCDC;
+  --text-muted:var(--ink-300);
+  --text-inverse:var(--ink-900);
+  --text-accent:var(--wine-300);
+  --text-link:#FAFAFA;
+  --text-link-hover:var(--wine-300);
+  --surface-accent:var(--wine-300);
+  --surface-accent-soft:#2A1418;
+  --focus-ring:var(--wine-300);
+  --surface-accent-hover:#E3AEB6;
+  --border-accent:var(--wine-300);
+  --wash-accent:rgba(208,138,151,.26);
+  --surface-page:#0D0D0D;
+  --surface-card:#171717;
+  --surface-sunken:#000000;
+  --surface-inverse:#FAFAFA;
+  --border-subtle:#2B2B2B;
+  --border-strong:#FAFAFA;
+  --border-muted:var(--ink-700);
+}
