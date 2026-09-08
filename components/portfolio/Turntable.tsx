@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
-const YOUTUBE_VIDEO_ID = "cOARkf5ZmtI";
+const YOUTUBE_VIDEO_ID = "SCl9CL9vqa4";
 
 type YouTubeWindow = typeof window & {
   YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
