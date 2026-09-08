@@ -51,7 +51,7 @@ export function Header({ dark, onToggleTheme, onOpenResume }: HeaderProps) {
           </div>
           <div className={mobileOpen ? "nav-panel open" : "nav-panel"}>
             <a href="#work" onClick={closeMobileNav}>
-              My Journey
+              About
             </a>
             <a href="#vlog" onClick={closeMobileNav}>
               Vlog
