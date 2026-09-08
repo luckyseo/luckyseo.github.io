@@ -5,11 +5,24 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
+const YOUTUBE_VIDEO_ID = "SCl9CL9vqa4";
+
+type YouTubeWindow = typeof window & {
+  YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
+  onYouTubeIframeAPIReady?: () => void;
+};
+
+type YouTubePlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  destroy: () => void;
+};
 
 export function Turntable() {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const ytMountRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
   const velocityRef = useRef(0);
   const angleRef = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -42,20 +55,57 @@ export function Turntable() {
     };
   }, [playing]);
 
-  async function togglePlaying() {
+  useEffect(() => {
+    const win = window as YouTubeWindow;
+
+    function createPlayer() {
+      if (!ytMountRef.current || !win.YT) return;
+
+      playerRef.current = new win.YT.Player(ytMountRef.current, {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: {
+          playsinline: 1,
+          controls: 0,
+          disablekb: 1,
+          loop: 1,
+          playlist: YOUTUBE_VIDEO_ID,
+          modestbranding: 1,
+          rel: 0,
+        },
+      });
+    }
+
+    if (win.YT?.Player) {
+      createPlayer();
+    } else {
+      const previousCallback = win.onYouTubeIframeAPIReady;
+
+      win.onYouTubeIframeAPIReady = () => {
+        previousCallback?.();
+        createPlayer();
+      };
+
+      if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(script);
+      }
+    }
+
+    return () => {
+      playerRef.current?.destroy();
+      playerRef.current = null;
+    };
+  }, []);
+
+  function togglePlaying() {
     const nextPlaying = !playing;
     setPlaying(nextPlaying);
 
-    if (!audioRef.current) return;
-
     if (nextPlaying) {
-      try {
-        await audioRef.current.play();
-      } catch {
-        // The visual turntable still works before a real audio file is added.
-      }
+      playerRef.current?.playVideo();
     } else {
-      audioRef.current.pause();
+      playerRef.current?.pauseVideo();
     }
   }
 
@@ -82,7 +132,7 @@ export function Turntable() {
       </button>
       <h2>Fallen Angel</h2>
       <p>Jennie</p>
-      <audio ref={audioRef} src="/audio/now-playing.mp3" loop preload="none" />
+      <div ref={ytMountRef} className="turntable__yt-mount" aria-hidden />
     </aside>
   );
 }

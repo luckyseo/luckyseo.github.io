@@ -515,6 +515,15 @@ textarea {
   font: var(--type-body-sm);
 }
 
+.turntable__yt-mount {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .record {
   position: absolute;
   inset: 0;
