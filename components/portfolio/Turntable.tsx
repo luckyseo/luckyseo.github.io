@@ -82,6 +82,8 @@ export function Turntable() {
 
       playerRef.current = new win.YT.Player(mount, {
         videoId: YOUTUBE_VIDEO_ID,
+        width: "200",
+        height: "200",
         playerVars: {
           playsinline: 1,
           controls: 0,
