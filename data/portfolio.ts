@@ -3,9 +3,9 @@ export const profile = {
   shortName: "Yun",
   location: "Sydney",
   timezone: "UTC+10",
-  email: "hello@yourdomain.com",
+  email: "ityun777@gmail.com",
   linkedin: "https://www.linkedin.com/in/yunseo-park-profile/",
-  github: "https://github.com/yourname",
+  github: "https://github.com/luckyseo",
   availability: "Open to work",
   intro: "Explore, Experience, Evolve and Share positivity",
   interests: [
