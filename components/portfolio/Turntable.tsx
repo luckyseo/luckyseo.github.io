@@ -18,11 +18,21 @@ type YouTubePlayer = {
   destroy: () => void;
 };
 
+const YT_ERROR_MESSAGES: Record<number, string> = {
+  2: "Invalid video ID.",
+  5: "This video can't be played in an HTML5 player.",
+  100: "Video not found (removed or private).",
+  101: "The video owner has disabled embedding this video.",
+  150: "The video owner has disabled embedding this video.",
+};
+
 export function Turntable() {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
   const ytWrapperRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
+  const isReadyRef = useRef(false);
+  const desiredPlayingRef = useRef(false);
   const velocityRef = useRef(0);
   const angleRef = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -81,6 +91,19 @@ export function Turntable() {
           modestbranding: 1,
           rel: 0,
         },
+        events: {
+          onReady: () => {
+            isReadyRef.current = true;
+            if (desiredPlayingRef.current) {
+              playerRef.current?.playVideo();
+            }
+          },
+          onError: (event: { data: number }) => {
+            const message = YT_ERROR_MESSAGES[event.data] ?? `YouTube player error (code ${event.data}).`;
+            // eslint-disable-next-line no-console
+            console.error(`[Turntable] ${message}`);
+          },
+        },
       });
     }
 
@@ -103,6 +126,7 @@ export function Turntable() {
 
     return () => {
       cancelled = true;
+      isReadyRef.current = false;
       playerRef.current?.destroy();
       playerRef.current = null;
 
@@ -115,6 +139,9 @@ export function Turntable() {
   function togglePlaying() {
     const nextPlaying = !playing;
     setPlaying(nextPlaying);
+    desiredPlayingRef.current = nextPlaying;
+
+    if (!isReadyRef.current) return;
 
     if (nextPlaying) {
       playerRef.current?.playVideo();
