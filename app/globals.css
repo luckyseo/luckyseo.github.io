@@ -588,7 +588,7 @@ textarea {
 
 .info-row h3 {
   margin: 0;
-  font: var(--type-heading);
+  font: var(--type-subheading);
   letter-spacing: var(--tracking-display);
 }
 
