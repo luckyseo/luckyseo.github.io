@@ -5,11 +5,34 @@ import { cn } from "@/lib/cn";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
+const YOUTUBE_VIDEO_ID = "Qt6Y9_7QeHQ";
+
+type YouTubeWindow = typeof window & {
+  YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
+  onYouTubeIframeAPIReady?: () => void;
+};
+
+type YouTubePlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  destroy: () => void;
+};
+
+const YT_ERROR_MESSAGES: Record<number, string> = {
+  2: "Invalid video ID.",
+  5: "This video can't be played in an HTML5 player.",
+  100: "Video not found (removed or private).",
+  101: "The video owner has disabled embedding this video.",
+  150: "The video owner has disabled embedding this video.",
+};
 
 export function Turntable() {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const ytWrapperRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
+  const isReadyRef = useRef(false);
+  const desiredPlayingRef = useRef(false);
   const velocityRef = useRef(0);
   const angleRef = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -42,20 +65,103 @@ export function Turntable() {
     };
   }, [playing]);
 
-  async function togglePlaying() {
+  useEffect(() => {
+    const win = window as YouTubeWindow;
+    let cancelled = false;
+
+    // The YouTube API replaces its mount element with an <iframe>, so each
+    // effect run gets its own fresh child of the stable wrapper div rather
+    // than reusing a node the API has already detached (React 18 Strict Mode
+    // double-invokes this effect in development, which would otherwise hand
+    // the second run an already-swapped-out, broken container).
+    function createPlayer() {
+      if (cancelled || !ytWrapperRef.current || !win.YT) return;
+
+      const mount = document.createElement("div");
+      ytWrapperRef.current.appendChild(mount);
+
+      playerRef.current = new win.YT.Player(mount, {
+        videoId: YOUTUBE_VIDEO_ID,
+        width: "200",
+        height: "200",
+        playerVars: {
+          playsinline: 1,
+          controls: 0,
+          disablekb: 1,
+          modestbranding: 1,
+          rel: 0,
+        },
+        events: {
+          onReady: () => {
+            // eslint-disable-next-line no-console
+            console.debug("[Turntable] player ready, desired playing:", desiredPlayingRef.current);
+            isReadyRef.current = true;
+            if (desiredPlayingRef.current) {
+              playerRef.current?.playVideo();
+            }
+          },
+          onStateChange: (event: { data: number }) => {
+            // eslint-disable-next-line no-console
+            console.debug("[Turntable] state changed:", event.data);
+            // 0 = ENDED — loop manually instead of via playerVars.loop/playlist,
+            // since combining that with a top-level videoId for the same video
+            // triggers an "HTML5 player error" (code 5) on some player builds.
+            if (event.data === 0 && desiredPlayingRef.current) {
+              playerRef.current?.playVideo();
+            }
+          },
+          onError: (event: { data: number }) => {
+            const message = YT_ERROR_MESSAGES[event.data] ?? `YouTube player error (code ${event.data}).`;
+            // eslint-disable-next-line no-console
+            console.error(`[Turntable] ${message}`);
+          },
+        },
+      });
+
+      // eslint-disable-next-line no-console
+      console.debug("[Turntable] player constructed");
+    }
+
+    if (win.YT?.Player) {
+      createPlayer();
+    } else {
+      const previousCallback = win.onYouTubeIframeAPIReady;
+
+      win.onYouTubeIframeAPIReady = () => {
+        previousCallback?.();
+        createPlayer();
+      };
+
+      if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(script);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+      isReadyRef.current = false;
+      playerRef.current?.destroy();
+      playerRef.current = null;
+
+      if (ytWrapperRef.current) {
+        ytWrapperRef.current.innerHTML = "";
+      }
+    };
+  }, []);
+
+  function togglePlaying() {
     const nextPlaying = !playing;
     setPlaying(nextPlaying);
+    desiredPlayingRef.current = nextPlaying;
 
-    if (!audioRef.current) return;
+    if (!isReadyRef.current) return;
 
     if (nextPlaying) {
-      try {
-        await audioRef.current.play();
-      } catch {
-        // The visual turntable still works before a real audio file is added.
-      }
+      playerRef.current?.playVideo();
     } else {
-      audioRef.current.pause();
+      playerRef.current?.pauseVideo();
     }
   }
 
@@ -82,7 +188,7 @@ export function Turntable() {
       </button>
       <h2>Fallen Angel</h2>
       <p>Jennie</p>
-      <audio ref={audioRef} src="/audio/now-playing.mp3" loop preload="none" />
+      <div ref={ytWrapperRef} className="turntable__yt-mount" aria-hidden />
     </aside>
   );
 }
