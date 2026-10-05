@@ -13,7 +13,7 @@ export const profile = {
     { icon: "🏃", label: "park walk" },
     { icon: "📖", label: "reading(trying)" },
     { icon: "🎧", label: "asmr" },
-    { icon: "🧀", label: "too much cheese" },
+    { icon: "🍑", label: "peach" },
     { icon: "🌹", label: "rose perfume" },
   ],
 };
@@ -44,22 +44,22 @@ export const projects = [
     title: "Portfolio/Vlog Website",
     stack: ["Next.js", "TypeScript", "Claude Design"],
     excerpt:
-      "A personal portfolio built from a serif-first design system, with a few small human details kept in.",
+      "Published portfolio webiste for the first time!",
     details:
-      "The goal is a portfolio that reads clearly, loads quickly and still feels like a person made it. I translated a prototype design handoff into reusable Next.js components and editable content records.",
+      "Upcoming features: edit without hardcoding, add like feature for projects/posts section",
     images: [null, null, null, null, null],
-    likes: 12,
+    likes: 0,
   },
   {
     year: "2026",
-    title: "FreshBasket",
-    stack: ["ASP.NET", "Razor Pages", "Checkout flow"],
+    title: "AI Agent for Early Detection of Social Isolation",
+    stack: ["Korea", "AI Agent", "Data Analysis"],
     excerpt:
-      "A grocery ordering app with product browsing, cart behaviour and checkout feedback.",
+      "14th BigContest 2026 in Korea untill 26/10/2026",
     details:
-      "I focused on the everyday paths: adding items, seeing totals, and confirming checkout without making the interface feel heavier than the task.",
+      "More details coming soon...",
     images: [null, null, null, null, null],
-    likes: 7,
+    likes: 0,
   },
 ];
 
@@ -71,7 +71,7 @@ export const posts = [
     excerpt:
       "It took within two days to build... it should've taken much longer before ai become this familiar",
     details:
-      "This is built using Next.js and I am planning to add editable feature so I can update the contents without touching codebase",
+      "I should've done this a year ago... Now I cannot put this off anymore! Please click the record icon on the top right ♪(´▽｀) so you can also listen to the music + also that's my favorite part on this website\n This is built using Next.js and I am planning to add editable feature so I can update the contents without touching codebase",
     likes: 0,
   },
 ];
