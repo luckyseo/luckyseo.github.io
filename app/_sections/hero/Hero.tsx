@@ -90,7 +90,7 @@ export function Hero() {
             <p className="interests__note">Text emoji adds more personality ʕ̡̢̡◌･ꄃ･◌ʔ̢̡̢˞͛</p>
           </div>
         </div>
-        <Turntable />
+        <Turntable song={profile.song} />
       </div>
     </section>
   );

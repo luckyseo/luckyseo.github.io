@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/app/_components/cn";
+import type { Song } from "@/services/content/types";
 
 const RPM = 33.3;
 const TARGET_DPS = RPM * 6;
-const YOUTUBE_VIDEO_ID = "Qt6Y9_7QeHQ";
 
 type YouTubeWindow = typeof window & {
   YT?: { Player: new (element: HTMLElement, options: Record<string, unknown>) => YouTubePlayer };
@@ -26,7 +26,11 @@ const YT_ERROR_MESSAGES: Record<number, string> = {
   150: "The video owner has disabled embedding this video.",
 };
 
-export function Turntable() {
+type TurntableProps = {
+  song: Song;
+};
+
+export function Turntable({ song }: TurntableProps) {
   const [playing, setPlaying] = useState(false);
   const [angle, setAngle] = useState(0);
   const ytWrapperRef = useRef<HTMLDivElement>(null);
@@ -75,13 +79,13 @@ export function Turntable() {
     // double-invokes this effect in development, which would otherwise hand
     // the second run an already-swapped-out, broken container).
     function createPlayer() {
-      if (cancelled || !ytWrapperRef.current || !win.YT) return;
+      if (cancelled || !ytWrapperRef.current || !win.YT || !song.youtubeId) return;
 
       const mount = document.createElement("div");
       ytWrapperRef.current.appendChild(mount);
 
       playerRef.current = new win.YT.Player(mount, {
-        videoId: YOUTUBE_VIDEO_ID,
+        videoId: song.youtubeId,
         width: "200",
         height: "200",
         playerVars: {
@@ -149,7 +153,7 @@ export function Turntable() {
         ytWrapperRef.current.innerHTML = "";
       }
     };
-  }, []);
+  }, [song.youtubeId]);
 
   function togglePlaying() {
     const nextPlaying = !playing;
@@ -186,8 +190,8 @@ export function Turntable() {
         </span>
         <span className="turntable__hint">{playing ? "Tap to stop" : "Tap to play"}</span>
       </button>
-      <h2>Fallen Angel</h2>
-      <p>Jennie</p>
+      {song.title ? <h2>{song.title}</h2> : null}
+      {song.artist ? <p>{song.artist}</p> : null}
       <div ref={ytWrapperRef} className="turntable__yt-mount" aria-hidden />
     </aside>
   );

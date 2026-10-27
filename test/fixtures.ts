@@ -15,6 +15,7 @@ export function sampleContent(): SiteContent {
         { icon: "mail", label: "Email", value: "me@example.com", href: "mailto:me@example.com" },
         { icon: "at-sign", label: "LinkedIn", value: "linkedin", href: "https://www.linkedin.com/in/test/" },
       ],
+      song: { title: "Song", artist: "Artist", youtubeId: "Qt6Y9_7QeHQ" },
     },
     education: [{ place: "UTS", degree: "Bachelor of IT", detail: ["Major"], date: "2026" }],
     projects: [

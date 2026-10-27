@@ -47,6 +47,7 @@ const validProfile = {
   intro: "",
   interests: [],
   contacts: [],
+  song: { title: "", artist: "", youtubeId: "" },
 };
 
 let env: RulesTestEnvironment;
@@ -91,6 +92,9 @@ describe("writing content", () => {
 
   it("is allowed for the admin with valid data", async () => {
     await assertSucceeds(setDoc(doc(admin(), "content", "profile"), { ...validProfile, name: "Renamed" }));
+    await assertSucceeds(
+      setDoc(doc(admin(), "content", "profile"), { ...validProfile, song: { title: "Fallen Angel", artist: "Jennie", youtubeId: "Qt6Y9_7QeHQ" } }),
+    );
     await assertSucceeds(setDoc(doc(admin(), "content", "projects"), { items: [] }));
     await assertSucceeds(setDoc(doc(admin(), "content", "posts"), { items: [] }));
     await assertSucceeds(setDoc(doc(admin(), "content", "education"), { items: [] }));
@@ -100,6 +104,8 @@ describe("writing content", () => {
     await assertFails(setDoc(doc(admin(), "content", "profile"), { ...validProfile, name: "" }));
     await assertFails(setDoc(doc(admin(), "content", "profile"), { ...validProfile, extra: "field" }));
     await assertFails(setDoc(doc(admin(), "content", "profile"), { ...validProfile, intro: "x".repeat(401) }));
+    await assertFails(setDoc(doc(admin(), "content", "profile"), { ...validProfile, song: { ...validProfile.song, youtubeId: "not-an-id" } }));
+    await assertFails(setDoc(doc(admin(), "content", "profile"), { ...validProfile, song: { ...validProfile.song, extra: "x" } }));
     await assertFails(setDoc(doc(admin(), "content", "projects"), { items: "not a list" }));
     await assertFails(setDoc(doc(admin(), "content", "projects"), { items: Array(51).fill({}) }));
   });

@@ -11,6 +11,7 @@ export const EMPTY_CONTENT: SiteContent = {
     intro: "",
     interests: [],
     contacts: [],
+    song: { title: "", artist: "", youtubeId: "" },
   },
   education: [],
   projects: [],

@@ -7,11 +7,12 @@ import { ContactsEditor } from "@/app/_sections/contacts/ContactsEditor";
 import { EducationEditor } from "@/app/_sections/education/EducationEditor";
 import { InterestsEditor } from "@/app/_sections/hero/InterestsEditor";
 import { pickProfileBasics, ProfileEditor } from "@/app/_sections/hero/ProfileEditor";
+import { SongEditor } from "@/app/_sections/hero/SongEditor";
 import { ProjectsEditor } from "@/app/_sections/projects/ProjectsEditor";
 import { PostsEditor } from "@/app/_sections/vlog/PostsEditor";
 import { useContent, useSaveSection } from "@/services/content/ContentProvider";
 
-const TABS = ["Profile", "Interests", "Contacts", "Education", "Projects", "Vlog", "Backup"] as const;
+const TABS = ["Profile", "Interests", "Song", "Contacts", "Education", "Projects", "Vlog", "Backup"] as const;
 type Tab = (typeof TABS)[number];
 
 export function AdminDashboard() {
@@ -19,7 +20,7 @@ export function AdminDashboard() {
   const saveSection = useSaveSection();
   const [tab, setTab] = useState<Tab>("Profile");
 
-  // Interests and contacts are stored in the profile document,
+  // Interests, song and contacts are stored in the profile document,
   // so each of those editors saves its part merged into the latest profile.
   const basics = useMemo(() => pickProfileBasics(profile), [profile]);
   const content = { profile, education, projects, posts };
@@ -47,6 +48,7 @@ export function AdminDashboard() {
       {tab === "Interests" ? (
         <InterestsEditor value={profile.interests} onSave={(value) => saveSection("profile", { ...profile, interests: value })} />
       ) : null}
+      {tab === "Song" ? <SongEditor value={profile.song} onSave={(value) => saveSection("profile", { ...profile, song: value })} /> : null}
       {tab === "Contacts" ? (
         <ContactsEditor value={profile.contacts} onSave={(value) => saveSection("profile", { ...profile, contacts: value })} />
       ) : null}

@@ -6,9 +6,9 @@ import { useSectionDraft, type EditorProps } from "@/app/_components/admin/useSe
 import type { Profile } from "@/services/content/types";
 import { LIMITS, profileSchema } from "@/services/content/validation";
 
-export type ProfileBasics = Omit<Profile, "interests" | "contacts">;
+export type ProfileBasics = Omit<Profile, "interests" | "contacts" | "song">;
 
-export const profileBasicsSchema = profileSchema.omit({ interests: true, contacts: true });
+export const profileBasicsSchema = profileSchema.omit({ interests: true, contacts: true, song: true });
 
 export function pickProfileBasics({ name, shortName, location, timezone, availability, intro }: Profile): ProfileBasics {
   return { name, shortName, location, timezone, availability, intro };

@@ -56,6 +56,35 @@ export const interestSchema = z.object({
   label: requiredText(LIMITS.shortText),
 });
 
+const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
+const YOUTUBE_HOSTS = ["youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com", "youtu.be"];
+
+/** Gets the video ID from a pasted YouTube link (watch, youtu.be, shorts, embed) or a bare ID. */
+export function parseYouTubeId(input: string) {
+  const value = input.trim();
+  if (YOUTUBE_ID.test(value)) return value;
+
+  try {
+    const url = new URL(value);
+    if (!YOUTUBE_HOSTS.includes(url.hostname)) return undefined;
+
+    const id = url.hostname === "youtu.be" ? url.pathname.slice(1) : url.searchParams.get("v") ?? url.pathname.split("/")[2];
+    return id && YOUTUBE_ID.test(id) ? id : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export const songSchema = z.object({
+  title: optionalText(LIMITS.shortText),
+  artist: optionalText(LIMITS.shortText),
+  // Empty means "no song": the turntable still spins but plays nothing.
+  youtubeId: z
+    .string()
+    .trim()
+    .refine((value) => value === "" || YOUTUBE_ID.test(value), "Paste a YouTube link or an 11-character video ID"),
+});
+
 export const contactSchema = z.object({
   icon: z.enum(CONTACT_ICONS),
   label: requiredText(LIMITS.shortText),
@@ -72,6 +101,8 @@ export const profileSchema = z.object({
   intro: optionalText(LIMITS.mediumText),
   interests: z.array(interestSchema).max(LIMITS.interests),
   contacts: z.array(contactSchema).max(LIMITS.contacts),
+  // Defaulted so profiles saved before the song existed still load.
+  song: songSchema.default({ title: "", artist: "", youtubeId: "" }),
 });
 
 export const educationItemSchema = z.object({

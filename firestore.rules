@@ -25,8 +25,18 @@ service cloud.firestore {
       return value is list && value.size() <= max;
     }
 
+    function isSong(song) {
+      return song is map
+        && song.keys().hasOnly(['title', 'artist', 'youtubeId'])
+        && song.keys().hasAll(['title', 'artist', 'youtubeId'])
+        && isText(song.title, 120)
+        && isText(song.artist, 120)
+        && song.youtubeId is string
+        && song.youtubeId.matches('^([A-Za-z0-9_-]{11})?$');
+    }
+
     function isProfile(data) {
-      let keys = ['name', 'shortName', 'location', 'timezone', 'availability', 'intro', 'interests', 'contacts'];
+      let keys = ['name', 'shortName', 'location', 'timezone', 'availability', 'intro', 'interests', 'contacts', 'song'];
       return data.keys().hasOnly(keys)
         && data.keys().hasAll(keys)
         && isRequiredText(data.name, 120)
@@ -36,7 +46,8 @@ service cloud.firestore {
         && isText(data.availability, 120)
         && isText(data.intro, 400)
         && isListOf(data.interests, 20)
-        && isListOf(data.contacts, 10);
+        && isListOf(data.contacts, 10)
+        && isSong(data.song);
     }
 
     function isItemsDoc(data, max) {

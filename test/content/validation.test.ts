@@ -3,9 +3,12 @@ import {
   contactSchema,
   formatIssues,
   LIMITS,
+  parseYouTubeId,
+  profileSchema,
   projectSchema,
   sanitizeUrl,
   siteContentSchema,
+  songSchema,
 } from "@/services/content/validation";
 import { sampleContent } from "@/test/fixtures";
 
@@ -27,6 +30,37 @@ describe("sanitizeUrl", () => {
 
   it("can be limited to https only", () => {
     expect(sanitizeUrl("mailto:me@example.com", ["https:"])).toBeUndefined();
+  });
+});
+
+describe("parseYouTubeId", () => {
+  it("reads the ID from the usual YouTube link shapes", () => {
+    const id = "Qt6Y9_7QeHQ";
+    expect(parseYouTubeId(id)).toBe(id);
+    expect(parseYouTubeId(`https://www.youtube.com/watch?v=${id}&t=30s`)).toBe(id);
+    expect(parseYouTubeId(`https://youtu.be/${id}?si=abc`)).toBe(id);
+    expect(parseYouTubeId(`https://music.youtube.com/watch?v=${id}`)).toBe(id);
+    expect(parseYouTubeId(`https://www.youtube.com/shorts/${id}`)).toBe(id);
+    expect(parseYouTubeId(`https://www.youtube.com/embed/${id}`)).toBe(id);
+  });
+
+  it("rejects other sites and malformed IDs", () => {
+    expect(parseYouTubeId("https://evil.example.com/watch?v=Qt6Y9_7QeHQ")).toBeUndefined();
+    expect(parseYouTubeId("https://www.youtube.com/watch?v=short")).toBeUndefined();
+    expect(parseYouTubeId("<script>")).toBeUndefined();
+    expect(parseYouTubeId("")).toBeUndefined();
+  });
+});
+
+describe("song", () => {
+  it("allows an empty video ID (no music) but not a malformed one", () => {
+    expect(songSchema.safeParse({ title: "", artist: "", youtubeId: "" }).success).toBe(true);
+    expect(songSchema.safeParse({ title: "", artist: "", youtubeId: "https://youtu.be/x" }).success).toBe(false);
+  });
+
+  it("fills in an empty song for profiles saved before songs existed", () => {
+    const { song: _song, ...oldProfile } = sampleContent().profile;
+    expect(profileSchema.parse(oldProfile).song).toEqual({ title: "", artist: "", youtubeId: "" });
   });
 });
 

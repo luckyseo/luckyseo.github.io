@@ -226,3 +226,10 @@ textarea.admin-field__input {
     grid-column: 1 / -1;
   }
 }
+
+.admin-song__thumb {
+  width: 12rem;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
