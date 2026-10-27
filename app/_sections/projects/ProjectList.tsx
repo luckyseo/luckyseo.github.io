@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/app/_components/core/Button";
 import { PostCard } from "@/app/_components/post/PostCard";
 import { useContent } from "@/services/content/ContentProvider";
+import { likeIdFor } from "@/services/likes/LikesRepository";
 import { sanitizeUrl } from "@/services/content/validation";
 
 export function ProjectList() {
@@ -13,9 +14,9 @@ export function ProjectList() {
 
   return (
     <div className="rows">
-      {visibleProjects.map((project, index) => (
+      {visibleProjects.map((project) => (
         <PostCard
-          key={`${project.title}-${index}`}
+          key={project.id}
           date={project.year}
           tags={project.stack}
           images={project.images.map((src) => sanitizeUrl(src, ["https:"]) ?? null)}
@@ -24,7 +25,7 @@ export function ProjectList() {
           details={project.details}
           showImage
           imageWidth={168}
-          likes={project.likes}
+          likeId={likeIdFor("project", project.id)}
         />
       ))}
       {projects.length > 3 ? (

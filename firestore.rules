@@ -69,6 +69,19 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Like counts: anyone can read them and add exactly 1 (visitors may like as often as they want).
+    // Nobody can set a count directly, lower it, add other fields, or delete it.
+    match /likes/{likeId} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if likeId.matches('^(project|post)-[a-z0-9-]{1,64}$')
+        && request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count == 1;
+      allow update: if request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count == resource.data.count + 1;
+      allow delete: if false;
+    }
+
     match /admins/{uid} {
       // A signed-in user may only check whether they themselves are an admin.
       allow get: if request.auth != null && request.auth.uid == uid;

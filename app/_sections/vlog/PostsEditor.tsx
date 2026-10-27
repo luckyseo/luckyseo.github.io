@@ -6,7 +6,7 @@ import { SectionEditor } from "@/app/_components/admin/SectionEditor";
 import { TextField } from "@/app/_components/admin/TextField";
 import { useSectionDraft, type EditorProps } from "@/app/_components/admin/useSectionDraft";
 import type { Post } from "@/services/content/types";
-import { LIMITS, postsSchema } from "@/services/content/validation";
+import { LIMITS, newItemId, postsSchema } from "@/services/content/validation";
 
 // Categories with their own tag colour in PostCard.
 const SUGGESTED_CATEGORIES = ["Working on", "Tech note", "Thought"];
@@ -46,7 +46,7 @@ export function PostsEditor({ value, onSave }: EditorProps<Post[]>) {
       <ListEditor
         items={draft.draft}
         onChange={draft.setDraft}
-        createItem={() => ({ date: today(), category: "Thought", title: "", excerpt: "", details: "", likes: 0 })}
+        createItem={() => ({ id: newItemId(), date: today(), category: "Thought", title: "", excerpt: "", details: "" })}
         itemLabel={(item) => item.title}
         addLabel="Add post"
         max={LIMITS.posts}

@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   contactSchema,
   formatIssues,
+  idFromTitle,
   LIMITS,
+  newItemId,
   parseYouTubeId,
+  postsSchema,
   profileSchema,
   projectSchema,
   sanitizeUrl,
@@ -61,6 +64,29 @@ describe("song", () => {
   it("fills in an empty song for profiles saved before songs existed", () => {
     const { song: _song, ...oldProfile } = sampleContent().profile;
     expect(profileSchema.parse(oldProfile).song).toEqual({ title: "", artist: "", youtubeId: "" });
+  });
+});
+
+describe("item ids (used to attach likes)", () => {
+  it("derives ids from titles for items saved before ids existed", () => {
+    const { id: _id, ...oldPost } = sampleContent().posts[0];
+    const [post] = postsSchema.parse([{ ...oldPost, title: "Working on: my portfolio, again" }]);
+    expect(post.id).toBe("working-on-my-portfolio-again");
+  });
+
+  it("uses a stable hash for titles without Latin letters", () => {
+    expect(idFromTitle("포트폴리오")).toMatch(/^t-[a-z0-9]+$/);
+    expect(idFromTitle("포트폴리오")).toBe(idFromTitle("포트폴리오"));
+  });
+
+  it("keeps existing ids and makes duplicates unique", () => {
+    const post = sampleContent().posts[0];
+    const ids = postsSchema.parse([post, { ...post }, { ...post, id: "custom" }]).map((item) => item.id);
+    expect(ids).toEqual(["hi", "hi-2", "custom"]);
+  });
+
+  it("creates random ids for new items that pass validation", () => {
+    expect(newItemId()).toMatch(/^[a-z0-9-]{1,64}$/);
   });
 });
 

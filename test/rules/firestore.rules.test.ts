@@ -6,8 +6,9 @@ import {
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
 import { deleteApp, initializeApp, type FirebaseApp } from "firebase/app";
-import { connectFirestoreEmulator, deleteDoc, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
+import { collection, connectFirestoreEmulator, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { createFirestoreLikesRepository } from "@/services/likes/firestoreLikesRepository";
 
 // Runs against the Firestore emulator: `npm run test:rules`.
 
@@ -128,5 +129,43 @@ describe("the admins collection", () => {
   it("cannot be written by anyone, so nobody can make themselves admin", async () => {
     await assertFails(setDoc(doc(stranger(), "admins", "someone-else"), {}));
     await assertFails(setDoc(doc(admin(), "admins", "someone-else"), {}));
+  });
+});
+
+describe("likes", () => {
+  const likeRef = (db: ReturnType<typeof firestoreAs>, id = "project-portfolio") => doc(db, "likes", id);
+
+  it("works end to end for a signed-out visitor, many times in a row", async () => {
+    const visitor = createFirestoreLikesRepository(anonymous());
+
+    expect(await visitor.getCount("project-portfolio")).toBe(0);
+    await visitor.like("project-portfolio");
+    await visitor.like("project-portfolio");
+    await visitor.like("project-portfolio");
+
+    // A different visitor sees the same total.
+    expect(await createFirestoreLikesRepository(anonymous()).getCount("project-portfolio")).toBe(3);
+  });
+
+  it("only allows adding exactly one", async () => {
+    await assertSucceeds(setDoc(likeRef(anonymous()), { count: 1 }));
+
+    await assertFails(setDoc(likeRef(anonymous()), { count: 999 }));
+    await assertFails(setDoc(likeRef(anonymous()), { count: 0 }));
+    await assertFails(setDoc(likeRef(anonymous()), { count: 3 }));
+    await assertSucceeds(setDoc(likeRef(anonymous()), { count: 2 }));
+  });
+
+  it("starts new counts at one", async () => {
+    await assertFails(setDoc(likeRef(anonymous(), "post-new"), { count: 50 }));
+    await assertSucceeds(setDoc(likeRef(anonymous(), "post-new"), { count: 1 }));
+  });
+
+  it("rejects extra fields, deletes, odd ids and listing", async () => {
+    await assertFails(setDoc(likeRef(anonymous()), { count: 1, spam: "x" }));
+    await assertFails(setDoc(likeRef(anonymous(), "anything-else"), { count: 1 }));
+    await assertSucceeds(setDoc(likeRef(anonymous()), { count: 1 }));
+    await assertFails(deleteDoc(likeRef(anonymous())));
+    await assertFails(getDocs(collection(anonymous(), "likes")));
   });
 });

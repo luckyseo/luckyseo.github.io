@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContentProvider } from "@/services/content/ContentProvider";
+import { LikesProvider } from "@/services/likes/LikesProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ContentProvider>{children}</ContentProvider>
+        <ContentProvider>
+          <LikesProvider>{children}</LikesProvider>
+        </ContentProvider>
       </body>
     </html>
   );

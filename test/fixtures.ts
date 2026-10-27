@@ -20,15 +20,15 @@ export function sampleContent(): SiteContent {
     education: [{ place: "UTS", degree: "Bachelor of IT", detail: ["Major"], date: "2026" }],
     projects: [
       {
+        id: "portfolio",
         year: "2026",
         title: "Portfolio",
         stack: ["Next.js"],
         excerpt: "Site",
         details: "More",
         images: ["https://example.com/a.png", null],
-        likes: 0,
       },
     ],
-    posts: [{ date: "1 Jan 2026", category: "Thought", title: "Hi", excerpt: "", details: "", likes: 0 }],
+    posts: [{ id: "hi", date: "1 Jan 2026", category: "Thought", title: "Hi", excerpt: "", details: "" }],
   };
 }

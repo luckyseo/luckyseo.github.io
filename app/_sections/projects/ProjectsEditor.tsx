@@ -7,17 +7,17 @@ import { TextField } from "@/app/_components/admin/TextField";
 import { useSectionDraft, type EditorProps } from "@/app/_components/admin/useSectionDraft";
 import { ImageUrlsField } from "@/app/_sections/projects/ImageUrlsField";
 import type { Project } from "@/services/content/types";
-import { LIMITS, projectsSchema } from "@/services/content/validation";
+import { LIMITS, newItemId, projectsSchema } from "@/services/content/validation";
 
 function newProject(): Project {
   return {
+    id: newItemId(),
     year: String(new Date().getFullYear()),
     title: "",
     stack: [],
     excerpt: "",
     details: "",
     images: Array.from({ length: LIMITS.images }, () => null),
-    likes: 0,
   };
 }
 

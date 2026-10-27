@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/app/_components/core/Button";
 import { PostCard } from "@/app/_components/post/PostCard";
 import { useContent } from "@/services/content/ContentProvider";
+import { likeIdFor } from "@/services/likes/LikesRepository";
 
 export function VlogList() {
   const { posts } = useContent();
@@ -12,15 +13,15 @@ export function VlogList() {
 
   return (
     <div className="rows">
-      {visiblePosts.map((post, index) => (
+      {visiblePosts.map((post) => (
         <PostCard
-          key={`${post.title}-${index}`}
+          key={post.id}
           date={post.date}
           category={post.category}
           title={post.title}
           excerpt={post.excerpt}
           details={post.details}
-          likes={post.likes}
+          likeId={likeIdFor("post", post.id)}
         />
       ))}
       {posts.length > 3 ? (

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Icon } from "@/app/_components/core/Icon";
 import { Tag } from "@/app/_components/core/Tag";
+import { LikeButton } from "@/app/_components/post/LikeButton";
 import { PhotoStrip } from "@/app/_components/post/PhotoStrip";
 import { cn } from "@/app/_components/cn";
 
@@ -22,40 +23,12 @@ type PostCardProps = {
   images?: (string | null | undefined)[];
   showImage?: boolean;
   imageWidth?: number;
-  likes?: number;
+  /** Shows a like button counting likes under this id. */
+  likeId?: string;
 };
 
 function realPhotos(images: (string | null | undefined)[] = []) {
   return images.filter((src): src is string => Boolean(src));
-}
-
-function LikeButton({ likes = 0 }: { likes?: number }) {
-  const [liked, setLiked] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const total = likes + (liked ? 1 : 0);
-
-  function toggle(event: React.MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    setLiked((value) => !value);
-    setPressed(true);
-    window.setTimeout(() => setPressed(false), 260);
-  }
-
-  return (
-    <button
-      className={cn("like-button", liked && "like-button--liked")}
-      onClick={toggle}
-      aria-pressed={liked}
-      aria-label={liked ? "Unlike this post" : "Like this post"}
-      type="button"
-    >
-      <span className={cn("like-button__heart", pressed && "like-button__heart--pressed")}>
-        {liked ? "♥" : "♡"}
-      </span>
-      {total}
-    </button>
-  );
 }
 
 function PhotoSlot({
@@ -123,7 +96,7 @@ export function PostCard({
   images = [],
   showImage,
   imageWidth = 112,
-  likes = 0,
+  likeId,
 }: PostCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [photosOpen, setPhotosOpen] = useState(false);
@@ -160,7 +133,7 @@ export function PostCard({
             <span>{title}</span>
           </h3>
           {excerpt ? <p className="post-card__excerpt">{excerpt}</p> : null}
-          <LikeButton likes={likes} />
+          {likeId ? <LikeButton likeId={likeId} /> : null}
         </div>
         {hasSlot ? (
           <PhotoSlot
