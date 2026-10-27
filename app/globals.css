@@ -1128,3 +1128,18 @@ textarea {
     width: 100%;
   }
 }
+
+/* Content is fetched in the browser: fade it in once it has loaded. */
+.content-main {
+  transition: opacity 240ms ease;
+}
+
+.content-main[aria-busy="true"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-main {
+    transition: none;
+  }
+}
