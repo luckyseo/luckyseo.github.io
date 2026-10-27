@@ -29,6 +29,7 @@ export function Header({ dark, onToggleTheme, onOpenResume }: HeaderProps) {
         <nav className="site-nav" aria-label="Main navigation">
           <div className="nav-links">
             <a href="#work">About</a>
+            <a href="#projects">Projects</a>
             <a href="#vlog">Vlog</a>
             <a href="#reach">Contact</a>
             <IconButton
@@ -52,6 +53,9 @@ export function Header({ dark, onToggleTheme, onOpenResume }: HeaderProps) {
           <div className={mobileOpen ? "nav-panel open" : "nav-panel"}>
             <a href="#work" onClick={closeMobileNav}>
               About
+            </a>
+            <a href="#projects" onClick={closeMobileNav}>
+              Projects
             </a>
             <a href="#vlog" onClick={closeMobileNav}>
               Vlog
