@@ -1,0 +1,69 @@
+rules_version = '2';
+
+// Public can read site content. Only the admin can write it.
+// The admin is whoever has a document at admins/{uid} (created by hand in the Firebase console).
+// Limits mirror services/content/validation.ts. The rules language has no loops,
+// so items inside lists are checked by the app (zod on save, sanitizeUrl on render).
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isText(value, max) {
+      return value is string && value.size() <= max;
+    }
+
+    function isRequiredText(value, max) {
+      return isText(value, max) && value.size() > 0;
+    }
+
+    function isListOf(value, max) {
+      return value is list && value.size() <= max;
+    }
+
+    function isProfile(data) {
+      let keys = ['name', 'shortName', 'location', 'timezone', 'availability', 'intro', 'interests', 'contacts'];
+      return data.keys().hasOnly(keys)
+        && data.keys().hasAll(keys)
+        && isRequiredText(data.name, 120)
+        && isRequiredText(data.shortName, 120)
+        && isText(data.location, 120)
+        && isText(data.timezone, 120)
+        && isText(data.availability, 120)
+        && isText(data.intro, 400)
+        && isListOf(data.interests, 20)
+        && isListOf(data.contacts, 10);
+    }
+
+    function isItemsDoc(data, max) {
+      return data.keys().hasOnly(['items'])
+        && data.keys().hasAll(['items'])
+        && isListOf(data.items, max);
+    }
+
+    function isValidSection(section, data) {
+      return (section == 'profile' && isProfile(data))
+        || (section == 'education' && isItemsDoc(data, 20))
+        || (section == 'projects' && isItemsDoc(data, 50))
+        || (section == 'posts' && isItemsDoc(data, 100));
+    }
+
+    match /content/{section} {
+      allow get, list: if true;
+      allow create, update: if isAdmin() && isValidSection(section, request.resource.data);
+      allow delete: if false;
+    }
+
+    match /admins/{uid} {
+      // A signed-in user may only check whether they themselves are an admin.
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+
+    // Everything else is denied by default.
+  }
+}

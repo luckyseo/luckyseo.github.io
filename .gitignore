@@ -3,6 +3,21 @@ node_modules
 out
 dist
 .env*
+!.env.example
 *.log
 .DS_Store
 *.tsbuildinfo
+
+# Site content lives in Firestore, never in git
+/backup/
+*.local.json
+
+# Firebase
+.firebaserc
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Tests
+coverage/
