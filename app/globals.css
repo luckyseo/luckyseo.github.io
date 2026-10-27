@@ -870,13 +870,16 @@ textarea {
 }
 
 .post-card__details--open {
-  max-height: 520px;
+  /* Tall enough for the longest allowed post (3000 characters plus line breaks). */
+  max-height: 3000px;
 }
 
 .post-card__details p {
   margin: 0 var(--space-2) var(--space-6);
   max-width: 75%;
   color: var(--text-secondary);
+  /* Keep the line breaks typed in /admin. */
+  white-space: pre-line;
 }
 
 .photo-strip-layer {
